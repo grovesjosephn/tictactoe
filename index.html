@@ -130,11 +130,15 @@
             var count = 0
             // console.log(playerturn)
             let win = playerturn ? checkWin('x') : checkWin('o')
-            if(win) {
+            if (win) {
                 h1.innerHTML = `Player ${playerturn ? "1" : "2"} has won!!!`
                 // console.log(`Player ${playerturn ? "1" : "2"} has won!!!`)
                 reset.style.display = "block"
                 blocks.forEach(block => block.removeEventListener('mouseup', handleClick))
+            }
+            if(boardState.indexOf("") === -1) {
+                h1.innerHTML = `DRAW!!!`
+                reset.style.display = "block"
             }
         }
 
