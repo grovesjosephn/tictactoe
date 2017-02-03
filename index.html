@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        :root {
+            font-size: 16px;
+            font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif
+        }
+
+        html, body, .container {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .board {
+            width: 360px;
+        }
+        
+        tr {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        tr:first-child> td {
+            border-top-style: none;
+        }
+        
+        tr:last-child> td {
+            border-bottom-style: none;
+        }
+        
+        tr> td:first-child {
+            border-left-style: none;
+        }
+        
+        tr> td:last-child {
+            border-right-style: none;
+        }
+        
+        td {
+            border-style: solid;
+            border-width: 1px;
+            border-color: #95989A;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 2rem;
+        }
+
+        button{
+            margin: 2rem;
+            padding: 1rem 2rem;
+            border-style: solid;
+            border-color: black;
+            background: transparent;
+            font-family: inherit;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+    </style>
+
+    <div class="container">
+
+        <h1 id="winner"></h1>
+
+        
+    <table class="board">
+        <tr>
+            <td data-id="1"></td>
+            <td data-id="2"></td>
+            <td data-id="3"></td>
+        </tr>
+        <tr>
+            <td data-id="4"></td>
+            <td data-id="5"></td>
+            <td data-id="6"></td>
+        </tr>
+        <tr>
+            <td data-id="7"></td>
+            <td data-id="8"></td>
+            <td data-id="9"></td>
+        </tr>
+    </table>
+
+    <button id="reset" hidden>Reset</button>
+
+
+    </div>
+
+    <script>
+        var boardState = ["", "", "", "", "", "", "", "", ""]
+        var magicSquare = [8, 1, 6, 3, 5, 7, 4, 9, 2]
+        var playerturn = true; // true for player 1 or x, false for player 2 or o
+
+        function handleClick(e) {
+            if (boardState[this.dataset.id - 1] === "") {
+                if (playerturn) {
+                    this.innerHTML = "x"
+                    boardState[this.dataset.id - 1] = "x"
+                }
+                else {
+                    this.innerHTML = "o"
+                    boardState[this.dataset.id - 1] = "o"
+                }
+                handleWinCondition()
+                playerturn = !playerturn
+            }
+        }
+
+        function handleWinCondition () {
+            var count = 0
+            // console.log(playerturn)
+            let win = playerturn ? checkWin('x') : checkWin('o')
+            if(win) {
+                h1.innerHTML = `Player ${playerturn ? "1" : "2"} has won!!!`
+                // console.log(`Player ${playerturn ? "1" : "2"} has won!!!`)
+                reset.style.display = "block"
+                blocks.forEach(block => block.removeEventListener('mouseup', handleClick))
+            }
+        }
+
+        function checkWin(player) {
+            // console.log(boardState)
+            if(
+                (boardState[0]===player && boardState[1]===player && boardState[2]===player) ||
+                (boardState[3]===player && boardState[4]===player && boardState[5]===player) ||
+                (boardState[6]===player && boardState[7]===player && boardState[8]===player) ||
+                (boardState[0]===player && boardState[3]===player && boardState[6]===player) ||
+                (boardState[1]===player && boardState[4]===player && boardState[7]===player) ||
+                (boardState[2]===player && boardState[5]===player && boardState[8]===player) ||
+                (boardState[0]===player && boardState[4]===player && boardState[8]===player) ||
+                (boardState[2]===player && boardState[4]===player && boardState[6]===player)
+            ){
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function handleReset () {
+            boardState = ["", "", "", "", "", "", "", "", ""]
+            playerturn = true
+            blocks.forEach(block => block.innerHTML = "")
+            h1.innerHTML = ""
+            reset.style.display = "none"
+            blocks.forEach(block => block.addEventListener('mouseup', handleClick))
+
+        }
+
+        var blocks = document.querySelectorAll("td");
+        blocks.forEach(block => block.addEventListener('mouseup', handleClick))
+
+        var h1 = document.getElementById('winner')
+        var reset = document.getElementById('reset')
+        reset.style.display = 'none'
+        reset.addEventListener('click', handleReset)
+    </script>
+</body>
+
+</html>
