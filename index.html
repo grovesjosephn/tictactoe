@@ -136,7 +136,7 @@
                 reset.style.display = "block"
                 blocks.forEach(block => block.removeEventListener('mouseup', handleClick))
             }
-            if(boardState.indexOf("") === -1) {
+            if(boardState.indexOf("") === -1 && !win) {
                 h1.innerHTML = `DRAW!!!`
                 reset.style.display = "block"
             }
